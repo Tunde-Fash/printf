@@ -1,79 +1,44 @@
-#include "main.h"
 #include <stdio.h>
 #include <stdarg.h>
 
-/**
- * _print_str - Print a string
- * @str: The string to print
- *
- * Return: The number of characters printed.
- */
-int _print_str(char *str)
-{
-	int count = 0;
+int _printf(const char *format, ...) {
+    va_list args;
+    const char *ptr;
+    int count = 0;
 
-	if (str)
-	{
-	while (*str)
-	{
-	putchar(*str);
-	str++;
-	count++;
-	}
-	}
-	else
-	{
-	count += _print_str("(null)");
-	}
+    va_start(args, format);
 
-	return (count);
+    for (ptr = format; *ptr != '\0'; ptr++) {
+        if (*ptr == '%') {
+            ptr++;  /* Move to the next character after '%' */
+            if (*ptr == 'c') {
+                int character = va_arg(args, int);
+                putchar(character);
+                count++;
+            } else if (*ptr == 's') {
+                const char *str = va_arg(args, const char *);
+                while (*str != '\0') {
+                    putchar(*str);
+                    str++;
+                    count++;
+                }
+            } else if (*ptr == '%') {
+                putchar('%');
+                count++;
+            }
+        } else {
+            putchar(*ptr);
+            count++;
+        }
+    }
+
+    va_end(args);
+
+    return count;
 }
 
-/**
- * _printf - Custom printf function
- * @format: The format string
- *
- * Return: The number of characters printed (excluding the null byte).
- */
-int _printf(const char *format, ...)
-{
-	va_list args;
-	int count = 0;
-
-	va_start(args, format);
-
-	while (format && *format)
-	{
-	if (*format != '%')
-	{
-	putchar(*format);
-	count++;
-	}
-	else
-	{
-	format++;
-	switch (*format)
-		{
-		case 'c':
-		putchar(va_arg(args, int));
-		count++;
-		break;
-		case 's':
-		count += _print_str(va_arg(args, char *));
-		break;
-		case '%':
-		putchar('%');
-		count++;
-		break;
-		default:
-		putchar('%');
-		putchar(*format);
-		count += 2;
-		break;
-	}
-	}
-	format++;
-	}
-	va_end(args);
-	return (count);
+int main() {
+    int count = _printf("Hello, %c! This is a %s function.\n", 'W', "printf");
+    printf("Total characters printed: %d\n", count);
+    return 0;
 }
