@@ -73,6 +73,16 @@ int _printf(const char *format, ...)
 	}
 	}
 	format++;
+	while (*format != '\0') {
+	if (*format == '%' && (*(format + 1) == 'd' || *(format + 1) == 'i')) {
+	int num = va_arg(args, int);
+	printf("%d", num);
+	format += 2;
+	}
+	else
+	{
+	putchar(*format);
+	format++;
 	}
 
 	va_end(args);
