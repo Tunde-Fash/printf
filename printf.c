@@ -78,3 +78,17 @@ int _printf(const char *format, ...)
 	va_end(args);
 	return (count);
 }
+/**
+ * main - Entry point of the program
+ *
+ * Return: Always 0
+ */
+int main(void)
+{
+	int len;
+
+	len = _printf("Hello, %s! You have %d dollars.\n", "Alice", 1000);
+	_printf("Length: %d\n", len);
+
+	return (0);
+}
